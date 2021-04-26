@@ -114,9 +114,9 @@ namespace ConsoleApp
             PropertyInfo[] properties = typeof(Customer).GetProperties();
             foreach (PropertyInfo property in properties)
             {
-                if (property.Name != "Addresses")
+                if (property.Name != "Addresses" && property.Name != "Orders")
                 {
-                    Console.Write(property.Name + ": ");
+                    Console.Write(property.Name + ": " );
                     property.SetValue(c, Console.ReadLine());
                 }
             }
