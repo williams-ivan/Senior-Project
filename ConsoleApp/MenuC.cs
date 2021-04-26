@@ -70,11 +70,11 @@ namespace ConsoleApp
         private int getChoice(int min, int max) {
             int choice;
             Console.Write("Enter selection: ");
-            choice = Convert.ToInt32(Console.ReadLine());
+            choice = int.Parse(Console.ReadLine());
             while (choice > max || choice < min)
             {
                 Console.Write("Invalid. Re-enter selection: ");
-                choice = Convert.ToInt32(Console.ReadLine());
+                choice = int.Parse(Console.ReadLine());
             }
             return choice;
         }
@@ -93,7 +93,7 @@ namespace ConsoleApp
 
                     foreach (MenuItem item in mainDispo.Items)
                     {
-                        if (count > 6)
+                        if (count > 5)
                         {
                             inv.Add(arr);
                             count = 0;
@@ -110,7 +110,7 @@ namespace ConsoleApp
                     {
                         inv.Add(arr);
                     }
-                    viewInv(inv, 0);
+                    viewInv(inv);
                     if (cart.Count == 0)
                     {
                         mainDispo = null;
@@ -132,7 +132,7 @@ namespace ConsoleApp
 
             foreach (Business b in Businesses)
             {
-                if (count > 6)
+                if (count > 5)
                 {
                     list.Add(arr);
                     count = 0;
@@ -156,7 +156,7 @@ namespace ConsoleApp
                 string[] choices = new string[9];
                 choices[0] = "<";
                 choices[1] = ">";
-                choices[2] = "7";
+                choices[2] = "0";
 
                 Console.WriteLine("Browse Dispensaries");
                 Console.WriteLine("\t\t\t\tPage " + (count + 1));
@@ -169,7 +169,7 @@ namespace ConsoleApp
                         counter++;
                     }
                 }
-                Console.WriteLine("7. Exit");
+                Console.WriteLine("0. Exit");
                 Console.WriteLine("====================================");
                 Console.Write("Enter selection (arrow keys to switch pages): ");
                 choice = Console.ReadLine();
@@ -196,25 +196,34 @@ namespace ConsoleApp
                 else
                 {
                     int n = Convert.ToInt32(choice);
-                    if (n < 7)
+                    if (n < 7 && n > 0)
                     {
-                        dispo = list[count][n - 1];
+                        if (list[count][n - 1].Items.Count == 0)
+                        {
+                            Console.WriteLine("This dispensary doesn't have products yet.");
+                            string wait = Console.ReadLine();
+                        }
+                        else
+                        {
+                            dispo = list[count][n - 1];
+                        }
                     }
                 }
-            } while (choice != "7" && dispo == null);
+            } while (choice != "0" && dispo == null);
 
             return dispo;
         }
-        private void viewInv(ObservableCollection<MenuItem[]> inv, int index)
+        private void viewInv(ObservableCollection<MenuItem[]> inv)
         {
             string choice;
+            int index = 0;
             do
             {
                 Console.Clear();
                 string[] choices = new string[9];
                 choices[0] = "<";
                 choices[1] = ">";
-                choices[2] = "7";
+                choices[2] = "0";
 
                 Console.WriteLine(mainDispo.Name + "'s Inventory");
                 Console.WriteLine("\t\t\t\tPage " + (index + 1));
@@ -229,7 +238,7 @@ namespace ConsoleApp
                         counter++;
                     }
                 }
-                Console.WriteLine("7. Exit");
+                Console.WriteLine("0. Exit");
                 Console.WriteLine("====================================");
                 Console.Write("Enter selection (arrow keys to switch pages): ");
                 choice = Console.ReadLine();
@@ -256,12 +265,12 @@ namespace ConsoleApp
                 else
                 {
                     int n = Convert.ToInt32(choice);
-                    if (n < 7)
+                    if (n < 7 && n > 0)
                     {
                         viewItem(inv[index][n - 1]);
                     }
                 }
-            } while (choice != "7");
+            } while (choice != "0");
         }
         private void viewItem(MenuItem item)
         {
@@ -293,6 +302,14 @@ namespace ConsoleApp
                 }
             }
         }
+        private string getTotalPrice() {
+            double price = 0;
+            foreach (MenuItem item in cart)
+            {
+                price += Convert.ToDouble(item.Price);
+            }
+            return price.ToString();
+        }
         private void viewCart()
         {
             string choice;
@@ -300,13 +317,13 @@ namespace ConsoleApp
             choices[0] = "b";
             choices[1] = "c";
             choices[2] = "o";
-            for (int i = 1; i < cart.Count; i++) {
-                choices[i + 2] = i.ToString();
+            for (int i = 0; i < cart.Count; i++) {
+                choices[i + 2] = (i + 1).ToString();
             }
 
             do {
                 Console.Clear();
-                Console.WriteLine("Cart");
+                Console.WriteLine("Cart\t\t\t\t$" + getTotalPrice());
                 Console.WriteLine("====================================");
                 int count = 1;
                 foreach (MenuItem item in cart)
@@ -331,14 +348,19 @@ namespace ConsoleApp
                 {
                     if (choice.ToLower() == "o")
                     {
-                        double price = 0;
-                        foreach (MenuItem item in cart) {
-                            price += Convert.ToDouble(item.Price);
-                            //o.Items.Add(item);
+                        Console.Clear();
+                        Console.WriteLine("Enter Address to Deliver to");
+                        Address a = new Address();
+                        PropertyInfo[] ap = typeof(Address).GetProperties();
+                        foreach (PropertyInfo p in ap)
+                        {
+                            Console.Write(p.Name + ": ");
+                            p.SetValue(a, Console.ReadLine());
                         }
+                        Customer.Addresses.Add(a);
                         Order o = new Order();
                         o.Date = DateTime.Today.ToString("d");
-                        o.TotalPrice = price.ToString();
+                        o.TotalPrice = getTotalPrice();
                         o.DasherShare = "0.15";
                         o.Status = "Pending";
                         o.Business = mainDispo.Email;
@@ -359,7 +381,7 @@ namespace ConsoleApp
                     }
                 }
             } while (choice.ToLower() != "b" && cart.Count > 0);
-            if (cart.Count > 0) {
+            if (cart.Count == 0) {
                 mainDispo = null;
             }
         }
@@ -425,25 +447,26 @@ namespace ConsoleApp
                         {
                             Console.WriteLine(property.Name + ": " + ((property.Name == "TotalPrice") ? "$" : "") + property.GetValue(Customer.Orders[index]));
                         }
+                        else if (property.Name == "Items")
+                        {
+                            foreach (MenuItem item in Customer.Orders[index].Items)
+                            {
+                                Console.WriteLine("------------------------------------");
+                                PropertyInfo[] ip = typeof(MenuItem).GetProperties();
+                                foreach (PropertyInfo p in ip)
+                                {
+                                    Console.WriteLine(p.Name + ": " + ((p.Name == "Price") ? "$" : "") + p.GetValue(item));
+                                }
+                            }
+                        }
                     }
                     Console.WriteLine("------------------------------------");
-                    Console.WriteLine("1. Reorder");
-                    Console.WriteLine("2. Print");
+                    Console.WriteLine("1. Print");
+                    Console.WriteLine((Customer.Orders[index].Status == "Completed") ? "2. Reorder" : "2. Order Received");
                     Console.WriteLine("3. Cancel");
                     Console.WriteLine("====================================");
                     int answer = getChoice(1, 3);
                     if (answer == 1)
-                    {
-                        Order o = new Order();
-                        o.Date = DateTime.Today.ToString("d");
-                        o.TotalPrice = Customer.Orders[index].TotalPrice;
-                        o.DasherShare = Customer.Orders[index].DasherShare;
-                        o.Status = "Pending";
-                        o.Business = Customer.Orders[index].Business;
-                        o.Items = Customer.Orders[index].Items;
-                        Customer.Orders.Add(o);
-                    }
-                    else if (answer == 2)
                     {
 
                         string filename, str = "";
@@ -457,6 +480,28 @@ namespace ConsoleApp
                         Console.Write("Enter file name: ");
                         filename = Console.ReadLine();
                         File.WriteAllText(filename, str);
+                    }
+                    else if (answer == 2)
+                    {
+                        if (Customer.Orders[index].Status == "Completed")
+                        {
+                            Order o = new Order();
+                            o.Date = DateTime.Today.ToString("d");
+                            o.TotalPrice = Customer.Orders[index].TotalPrice;
+                            o.DasherShare = Customer.Orders[index].DasherShare;
+                            o.Status = "Pending";
+                            o.Business = Customer.Orders[index].Business;
+                            o.Items = Customer.Orders[index].Items;
+                            Customer.Orders.Add(o);
+                        }
+                        else if (Customer.Orders[index].Status == "Delivered")
+                        {
+                            Customer.Orders[index].Status = "Completed";
+                        }
+                        else
+                        {
+                            Console.WriteLine("This order hasn't been delivered yet.");
+                        }
                     }
                 }
             } while (choice != "0");

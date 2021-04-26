@@ -141,7 +141,6 @@ namespace ConsoleApp
             {
                 if (property.Name == "Address")
                 {
-                    Console.WriteLine("Address:");
                     b.Address = new Address();
                     PropertyInfo[] ap = typeof(Address).GetProperties();
                     foreach (PropertyInfo p in ap)
@@ -160,7 +159,7 @@ namespace ConsoleApp
             {
                 dataStore.Businesses.Add(b);
                 save();
-                MenuB menu = new MenuB(b);
+                MenuB menu = new MenuB(b, dataStore.Businesses);
             }
             else
             {
@@ -253,7 +252,7 @@ namespace ConsoleApp
                 }
                 else if (bCheck("email", a.Email))
                 {
-                    MenuB menu = new MenuB((Business)a);
+                    MenuB menu = new MenuB((Business)a, dataStore.Businesses);
                 }
                 else if (dCheck("email", a.Email))
                 {

@@ -26,14 +26,15 @@ namespace ConsoleApp
             Console.WriteLine("====================================");
             Console.WriteLine("1. View Orders Available");
             Console.WriteLine("2. View Orders Taken");
-            Console.WriteLine("3. Log Out");
+            Console.WriteLine("3. View Orders Delivered");
+            Console.WriteLine("4. Log Out");
             Console.WriteLine("====================================");
             Console.Write("Enter selection: ");
-            choice = Convert.ToInt32(Console.ReadLine());
-            while (choice > 3 || choice < 1)
+            choice = int.Parse(Console.ReadLine());
+            while (choice > 4 || choice < 1)
             {
                 Console.Write("Invalid. Re-enter selection: ");
-                choice = Convert.ToInt32(Console.ReadLine());
+                choice = int.Parse(Console.ReadLine());
             }
             switch (choice)
             {
@@ -44,6 +45,7 @@ namespace ConsoleApp
                     viewOrders("taken");
                     break;
                 case 3:
+                    viewOrders("done");
                     break;
             }
             if (choice != 3)
@@ -60,7 +62,7 @@ namespace ConsoleApp
                 ObservableCollection<Order> temp = new ObservableCollection<Order>();
                 foreach (Order o in Customers[n].Orders)
                 {
-                    if ((type == "taken") ? (o.Status == "In Progress" && o.Dasher == Dasher.Email) : (o.Status == "Pending"))
+                    if ((type == "done") ? ((o.Status == "Delivered" || o.Status == "Completed") && o.Dasher == Dasher.Email) : (type == "taken") ? (o.Status == "In Progress" && o.Dasher == Dasher.Email) : (o.Status == "Pending"))
                     {
                         temp.Add(o);
                     }
@@ -68,7 +70,7 @@ namespace ConsoleApp
                 if (temp.Count > 0)
                 {
                     Console.Clear();
-                    Console.WriteLine((type == "taken") ? "Orders Accepted" : "Available Orders");
+                    Console.WriteLine((type == "done") ? "Orders Delivered" : (type == "taken") ? "Orders Accepted" : "Available Orders");
                     Console.WriteLine("\t\t\t\tPage " + n);
                     Console.WriteLine("====================================");
                     int count = 1;
@@ -129,26 +131,33 @@ namespace ConsoleApp
                             }
                         }
                         Console.WriteLine("====================================");
-                        string answer;
-                        do
+                        if (type != "done")
                         {
-                            Console.WriteLine(((type == "taken") ? "Delivered" : "Claim") + "? (Y/N)");
-                            answer = Console.ReadLine();
-                            Console.Write((answer.ToLower() != "y" && answer.ToLower() != "n") ? "Invalid. " : "");
-                        } while (answer.ToLower() != "y" && answer.ToLower() != "n");
-                        if (answer.ToLower() == "y")
+                            string answer;
+                            do
+                            {
+                                Console.WriteLine(((type == "taken") ? "Delivered" : "Claim") + "? (Y/N)");
+                                answer = Console.ReadLine();
+                                Console.Write((answer.ToLower() != "y" && answer.ToLower() != "n") ? "Invalid. " : "");
+                            } while (answer.ToLower() != "y" && answer.ToLower() != "n");
+                            if (answer.ToLower() == "y")
+                            {
+                                if (type == "taken")
+                                {
+                                    temp[index].Status = "Delivered";
+                                    Console.WriteLine("Order Delivered");
+                                }
+                                else
+                                {
+                                    temp[index].Dasher = Dasher.Email;
+                                    temp[index].Status = "In Progress";
+                                    Console.WriteLine("Delivery In Progress");
+                                }
+                                string wait = Console.ReadLine();
+                            }
+                        }
+                        else
                         {
-                            if (type == "taken")
-                            {
-                                temp[index].Status = "Delivered";
-                                Console.WriteLine("Order Delivered");
-                            }
-                            else
-                            {
-                                temp[index].Dasher = Dasher.Email;
-                                temp[index].Status = "In Progress";
-                                Console.WriteLine("Delivery In Progress");
-                            }
                             string wait = Console.ReadLine();
                         }
                     }

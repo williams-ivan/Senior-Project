@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleApp
 {
     class MenuB
     {
         public Business Business { get; set; }
-        public MenuB(Business b)
+        public ObservableCollection<Business> Businesses { get; set; }
+        public MenuB(Business b, ObservableCollection<Business> bl)
         {
             Business = b;
+            Businesses = bl;
             mainMenu();
         }
         public void mainMenu()
@@ -22,28 +21,48 @@ namespace ConsoleApp
             Console.WriteLine("MAIN MENU");
             Console.WriteLine("====================================");
             Console.WriteLine("1. Add Item");
-            Console.WriteLine("2. Remove Item");
-            Console.WriteLine("3. Log Out");
+            Console.WriteLine("2. View Inventory");
+            Console.WriteLine("3. View Dispensaries");
+            Console.WriteLine("4. Log Out");
             Console.WriteLine("====================================");
             Console.Write("Enter selection: ");
-            choice = Convert.ToInt32(Console.ReadLine());
-            while (choice > 3 || choice < 1) {
+            choice = int.Parse(Console.ReadLine());
+            while (choice > 4 || choice < 1) {
                 Console.Write("Invalid. Re-enter selection: ");
-                choice = Convert.ToInt32(Console.ReadLine());
+                choice = int.Parse(Console.ReadLine());
             }
             switch (choice) {
                 case 1:
                     addItem();
                     break;
                 case 2:
-                    removeItem();
+                    //removeItem();
                     break;
                 case 3:
                     break;
+                case 4:
+                    break;
             }
-            if (choice != 3) {
+            if (choice == 2 || choice == 3) {
+                Console.WriteLine("In Construction");
+                string wait = Console.ReadLine();
+            }
+            if (choice != 4) {
                 mainMenu();
             }
+        }
+        private int getChoice(int min, int max)
+        {
+            string input;
+            int choice;
+            Console.Write("Enter selection: ");
+            choice = int.Parse(Console.ReadLine());
+            while (choice > max || choice < min)
+            {
+                Console.Write("Invalid. Re-enter selection: ");
+                choice = int.Parse(Console.ReadLine());
+            }
+            return choice;
         }
         private MenuItem getItem(string name) {
             foreach (MenuItem item in Business.Items)
