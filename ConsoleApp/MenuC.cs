@@ -313,12 +313,12 @@ namespace ConsoleApp
         private void viewCart()
         {
             string choice;
-            string[] choices = new string[cart.Count + 2];
+            string[] choices = new string[cart.Count + 3];
             choices[0] = "b";
             choices[1] = "c";
             choices[2] = "o";
             for (int i = 0; i < cart.Count; i++) {
-                choices[i + 2] = (i + 1).ToString();
+                choices[i + 3] = (i + 1).ToString();
             }
 
             do {
