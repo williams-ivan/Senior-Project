@@ -364,7 +364,10 @@ namespace ConsoleApp
                         o.DasherShare = "0.15";
                         o.Status = "Pending";
                         o.Business = mainDispo.Email;
-                        o.Items = cart;
+                        foreach (MenuItem item in cart)
+                        {
+                            o.Items.Add(item);
+                        }
                         Customer.Orders.Add(o);
                     }
                     cart.Clear();

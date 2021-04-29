@@ -54,6 +54,7 @@ namespace ConsoleApp
         private int getChoice(int min, int max)
         {
             string input;
+
             int choice;
             Console.Write("Enter selection: ");
             choice = int.Parse(Console.ReadLine());

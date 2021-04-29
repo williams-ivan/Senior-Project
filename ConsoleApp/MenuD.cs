@@ -48,7 +48,7 @@ namespace ConsoleApp
                     viewOrders("done");
                     break;
             }
-            if (choice != 3)
+            if (choice != 4)
             {
                 mainMenu();
             }

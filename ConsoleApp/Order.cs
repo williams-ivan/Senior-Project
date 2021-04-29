@@ -33,7 +33,7 @@ namespace ConsoleApp
         public ObservableCollection<MenuItem> Items { get; set; }
         public Order()
         {
-            //Items = new ObservableCollection<MenuItem>();
+            Items = new ObservableCollection<MenuItem>();
         }
     }
 }
