@@ -310,6 +310,98 @@ namespace ConsoleApp
             }
             return price.ToString();
         }
+        private Address getAddress(int option) {
+            Address a = null;
+            if (option == 1) {
+                ObservableCollection<Address[]> list = new ObservableCollection<Address[]>();
+                int count = 0;
+                Address[] arr = new Address[6];
+
+                foreach (Address addy in Customer.Addresses)
+                {
+                    if (count > 5)
+                    {
+                        list.Add(arr);
+                        count = 0;
+                        arr = null;
+                    }
+                    if (count == 0 && arr == null)
+                    {
+                        arr = new Address[6];
+                    }
+                    arr[count] = addy;
+                    count++;
+                }
+                if (arr != null)
+                {
+                    list.Add(arr);
+                }
+                count = 0;
+
+                string choice;
+                do {
+                    Console.Clear();
+                    string[] choices = new string[8];
+                    choices[0] = "<";
+                    choices[1] = ">";
+
+                    Console.WriteLine("Select Address to Deliver to");
+                    Console.WriteLine("\t\t\t\tPage " + (count + 1));
+                    Console.WriteLine("====================================");
+                    int counter = 1;
+                    foreach (Address addy in list[count])
+                    {
+                        if (addy != null)
+                        {
+                            Console.WriteLine("{0}. {1}\n\t{2}, {3}\t{4}", counter, addy.StreetAddress, addy.City, addy.State, addy.ZipCode);
+                            choices[counter + 2] = counter.ToString();
+                            counter++;
+                        }
+                    }
+                    Console.WriteLine("====================================");
+                    Console.Write("Enter selection (arrow keys to switch pages): ");
+                    choice = Console.ReadLine();
+                    while (Array.Find(choices, c => c == choice) == null)
+                    {
+                        Console.Write("Invalid. Re-enter selection: ");
+                        choice = Console.ReadLine();
+                    }
+
+                    if (choice == "<")
+                    {
+                        if (count > 0)
+                        {
+                            count--;
+                        }
+                    }
+                    else if (choice == ">")
+                    {
+                        if (count < list.Count - 1)
+                        {
+                            count++;
+                        }
+                    }
+                    else
+                    {
+                        int n = Convert.ToInt32(choice);
+                        a = list[count][n - 1];
+                    }
+                } while (a == null);
+            }
+            else {
+                Console.Clear();
+                Console.WriteLine("Enter Address to Deliver to");
+                a = new Address();
+                PropertyInfo[] ap = typeof(Address).GetProperties();
+                foreach (PropertyInfo p in ap)
+                {
+                    Console.Write(p.Name + ": ");
+                    p.SetValue(a, Console.ReadLine());
+                }
+                Customer.Addresses.Add(a);
+            }
+            return a;
+        }
         private void viewCart()
         {
             string choice;
@@ -348,22 +440,26 @@ namespace ConsoleApp
                 {
                     if (choice.ToLower() == "o")
                     {
-                        Console.Clear();
-                        Console.WriteLine("Enter Address to Deliver to");
-                        Address a = new Address();
-                        PropertyInfo[] ap = typeof(Address).GetProperties();
-                        foreach (PropertyInfo p in ap)
+                        Address a;
+                        if (Customer.Addresses.Count == 0)
                         {
-                            Console.Write(p.Name + ": ");
-                            p.SetValue(a, Console.ReadLine());
+                            a = getAddress(2);
                         }
-                        Customer.Addresses.Add(a);
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("1. Select an address");
+                            Console.WriteLine("2. Enter a new address");
+                            int selection = getChoice(1, 2);
+                            a = getAddress(selection);
+                        }
                         Order o = new Order();
                         o.Date = DateTime.Today.ToString("d");
                         o.TotalPrice = getTotalPrice();
                         o.DasherShare = "0.15";
                         o.Status = "Pending";
                         o.Business = mainDispo.Email;
+                        o.Address = a;
                         foreach (MenuItem item in cart)
                         {
                             o.Items.Add(item);
@@ -446,11 +542,7 @@ namespace ConsoleApp
                     PropertyInfo[] properties = typeof(Order).GetProperties();
                     foreach (PropertyInfo property in properties)
                     {
-                        if (property.Name != "Items" && property.Name != "DasherShare")
-                        {
-                            Console.WriteLine(property.Name + ": " + ((property.Name == "TotalPrice") ? "$" : "") + property.GetValue(Customer.Orders[index]));
-                        }
-                        else if (property.Name == "Items")
+                        if (property.Name == "Items")
                         {
                             foreach (MenuItem item in Customer.Orders[index].Items)
                             {
@@ -461,6 +553,14 @@ namespace ConsoleApp
                                     Console.WriteLine(p.Name + ": " + ((p.Name == "Price") ? "$" : "") + p.GetValue(item));
                                 }
                             }
+                        }
+                        else if (property.Name == "Address")
+                        {
+                            Console.WriteLine("Address: {0}\n\t{1}, {2}\t{3}", Customer.Orders[index].Address.StreetAddress, Customer.Orders[index].Address.City, Customer.Orders[index].Address.State, Customer.Orders[index].Address.ZipCode);
+                        }
+                        else if (property.Name != "DasherShare")
+                        {
+                            Console.WriteLine(property.Name + ": " + ((property.Name == "TotalPrice") ? "$" : "") + property.GetValue(Customer.Orders[index]));
                         }
                     }
                     Console.WriteLine("------------------------------------");

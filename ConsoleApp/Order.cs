@@ -29,6 +29,9 @@ namespace ConsoleApp
         [DataMember(Name = "dasher")]
         public string Dasher { get; set; }
 
+        [DataMember(Name = "address")]
+        public Address Address { get; set; }
+
         [DataMember(Name = "items")]
         public ObservableCollection<MenuItem> Items { get; set; }
         public Order()

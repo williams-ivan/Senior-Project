@@ -125,7 +125,11 @@ namespace ConsoleApp
                         PropertyInfo[] properties = typeof(Order).GetProperties();
                         foreach (PropertyInfo property in properties)
                         {
-                            if (property.Name != "Items")
+                            if (property.Name == "Address")
+                            {
+                                Console.WriteLine("Address: {0}\n\t{1}, {2}\t{3}", temp[index].Address.StreetAddress, temp[index].Address.City, temp[index].Address.State, temp[index].Address.ZipCode);
+                            }
+                            else if (property.Name != "Items")
                             {
                                 Console.WriteLine(property.Name + ": " + ((property.Name == "TotalPrice") ? "$" : "") + property.GetValue(temp[index]));
                             }
