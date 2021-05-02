@@ -7,11 +7,11 @@ namespace ConsoleApp
     class MenuB
     {
         public Business Business { get; set; }
-        public ObservableCollection<Business> Businesses { get; set; }
-        public MenuB(Business b, ObservableCollection<Business> bl)
+        public ObservableCollection<Business> Others { get; set; }
+        public MenuB(Business b, ObservableCollection<Business> o)
         {
             Business = b;
-            Businesses = bl;
+            Others = o;
             mainMenu();
         }
         public void mainMenu()
@@ -25,27 +25,19 @@ namespace ConsoleApp
             Console.WriteLine("3. View Dispensaries");
             Console.WriteLine("4. Log Out");
             Console.WriteLine("====================================");
-            Console.Write("Enter selection: ");
-            choice = int.Parse(Console.ReadLine());
-            while (choice > 4 || choice < 1) {
-                Console.Write("Invalid. Re-enter selection: ");
-                choice = int.Parse(Console.ReadLine());
-            }
+            choice = getChoice(1, 4);
             switch (choice) {
                 case 1:
                     addItem();
                     break;
                 case 2:
-                    //removeItem();
+                    viewInv(Business);
                     break;
                 case 3:
+                    viewDispos();
                     break;
                 case 4:
                     break;
-            }
-            if (choice == 2 || choice == 3) {
-                Console.WriteLine("In Construction");
-                string wait = Console.ReadLine();
             }
             if (choice != 4) {
                 mainMenu();
@@ -53,8 +45,6 @@ namespace ConsoleApp
         }
         private int getChoice(int min, int max)
         {
-            string input;
-
             int choice;
             Console.Write("Enter selection: ");
             choice = int.Parse(Console.ReadLine());
@@ -65,15 +55,15 @@ namespace ConsoleApp
             }
             return choice;
         }
-        private MenuItem getItem(string name) {
+        private bool check(string name) {
             foreach (MenuItem item in Business.Items)
             {
                 if (item.Name == name)
                 {
-                    return item;
+                    return true;
                 }
             }
-            return null;
+            return false;
         }
         private void addItem()
         {
@@ -85,7 +75,7 @@ namespace ConsoleApp
                 Console.Write(property.Name + ": ");
                 property.SetValue(item, Console.ReadLine());
             }
-            if (getItem(item.Name) == null)
+            if (!check(item.Name))
             {
                 Business.Items.Add(item);
                 Console.WriteLine("The item (" + item.Name + ") was successfully added.");
@@ -96,24 +86,227 @@ namespace ConsoleApp
             }
             string wait = Console.ReadLine();
         }
-        private void removeItem()
+        private void viewDispos()
+        {
+            ObservableCollection<Business[]> list = new ObservableCollection<Business[]>();
+            int count = 0;
+            Business[] arr = new Business[6];
+
+            foreach (Business b in Others)
+            {
+                if (count > 5)
+                {
+                    list.Add(arr);
+                    count = 0;
+                    arr = null;
+                }
+                if (count == 0 && arr == null)
+                {
+                    arr = new Business[6];
+                }
+                arr[count] = b;
+                count++;
+            }
+            if (arr != null)
+            {
+                list.Add(arr);
+            }
+            count = 0;
+
+            string choice;
+            do
+            {
+                Console.Clear();
+                string[] choices = new string[9];
+                choices[0] = "<";
+                choices[1] = ">";
+                choices[2] = "0";
+
+                Console.WriteLine("Browse Dispensaries");
+                Console.WriteLine("\t\t\t\tPage " + (count + 1));
+                Console.WriteLine("====================================");
+                int counter = 1;
+                foreach (Business b in list[count])
+                {
+                    if (b != null)
+                    {
+                        Console.WriteLine(counter + ". " + b.Name);
+                        choices[counter + 2] = counter.ToString();
+                        counter++;
+                    }
+                }
+                Console.WriteLine("0. Exit");
+                Console.WriteLine("====================================");
+                Console.Write("Enter selection (arrow keys to switch pages): ");
+                choice = Console.ReadLine();
+                while (Array.Find(choices, c => c == choice) == null)
+                {
+                    Console.Write("Invalid. Re-enter selection: ");
+                    choice = Console.ReadLine();
+                }
+
+                if (choice == "<")
+                {
+                    if (count > 0)
+                    {
+                        count--;
+                    }
+                    else
+                    {
+                        count = list.Count - 1;
+                    }
+                }
+                else if (choice == ">")
+                {
+                    if (count < list.Count - 1)
+                    {
+                        count++;
+                    }
+                    else
+                    {
+                        count = 0;
+                    }
+                }
+                else
+                {
+                    int n = Convert.ToInt32(choice);
+                    if (n < 7 && n > 0)
+                    {
+                        if (list[count][n - 1].Items.Count == 0)
+                        {
+                            Console.WriteLine("This dispensary doesn't have products yet.");
+                            string wait = Console.ReadLine();
+                        }
+                        else
+                        {
+                            viewInv(list[count][n - 1]);
+                        }
+                    }
+                }
+            } while (choice != "0");
+        }
+        private void viewInv(Business dispo)
+        {
+            ObservableCollection<MenuItem[]> inv = new ObservableCollection<MenuItem[]>();
+            int count = 0;
+            MenuItem[] arr = new MenuItem[6];
+
+            foreach (MenuItem item in dispo.Items)
+            {
+                if (count > 5)
+                {
+                    inv.Add(arr);
+                    count = 0;
+                    arr = null;
+                }
+                if (count == 0 && arr == null)
+                {
+                    arr = new MenuItem[6];
+                }
+                arr[count] = item;
+                count++;
+            }
+            if (arr != null)
+            {
+                inv.Add(arr);
+            }
+            count = 0;
+
+            string choice;
+            do
+            {
+                Console.Clear();
+                string[] choices = new string[9];
+                choices[0] = "<";
+                choices[1] = ">";
+                choices[2] = "0";
+
+                Console.WriteLine(dispo.Name + "'s Inventory");
+                Console.WriteLine("\t\t\t\tPage " + (count + 1));
+                Console.WriteLine("====================================");
+                int counter = 1;
+                foreach (MenuItem item in inv[count])
+                {
+                    if (item != null)
+                    {
+                        Console.WriteLine(counter + ". " + item.Name);
+                        choices[counter + 2] = counter.ToString();
+                        counter++;
+                    }
+                }
+                Console.WriteLine("0. Exit");
+                Console.WriteLine("====================================");
+                Console.Write("Enter selection (arrow keys to switch pages): ");
+                choice = Console.ReadLine();
+                while (Array.Find(choices, c => c == choice) == null)
+                {
+                    Console.Write("Invalid. Re-enter selection: ");
+                    choice = Console.ReadLine();
+                }
+
+                if (choice == "<")
+                {
+                    if (count > 0)
+                    {
+                        count--;
+                    }
+                    else
+                    {
+                        count = inv.Count - 1;
+                    }
+                }
+                else if (choice == ">")
+                {
+                    if (count < inv.Count - 1)
+                    {
+                        count++;
+                    }
+                    else
+                    {
+                        count = 0;
+                    }
+                }
+                else
+                {
+                    int n = Convert.ToInt32(choice);
+                    if (n < 7 && n > 0)
+                    {
+                        viewItem(inv[count][n - 1], dispo == Business);
+                    }
+                }
+            } while (choice != "0");
+        }
+        private void viewItem(MenuItem item, bool main)
         {
             Console.Clear();
-            MenuItem item;
-            string name;
-            Console.Write("Enter the name of the item: ");
-            name = Console.ReadLine();
-            item = getItem(name);
-            if (item != null)
+            int choice;
+            Console.WriteLine("====================================");
+            PropertyInfo[] properties = typeof(MenuItem).GetProperties();
+            foreach (PropertyInfo property in properties)
             {
-                Business.Items.Remove(item);
-                Console.WriteLine("The item (" + name + ") was successfully removed.");
+                if (property.Name != "Information" && property.Name != "PrescriptionLength")
+                {
+                    Console.WriteLine(property.Name + ": " + ((property.Name == "Price") ? "$" : "") + property.GetValue(item));
+                }
+            }
+            if (main) {
+                Console.WriteLine("------------------------------------");
+                Console.WriteLine("1. Remove Item");
+                Console.WriteLine("2. Cancel");
+            }
+            Console.WriteLine("====================================");
+            if (main)
+            {
+                choice = getChoice(1, 2);
+                if (choice == 1)
+                {
+                    Business.Items.Remove(item);
+                }
             }
             else
             {
-                Console.WriteLine("The item (" + name + ") does not exist.");
+                string wait = Console.ReadLine();
             }
-            string wait = Console.ReadLine();
         }
     }
 }
