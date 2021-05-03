@@ -12,9 +12,6 @@ namespace ConsoleApp
     {
         public Address() { }
 
-        [DataMember(Name = "aptnum")]
-        public string AptNumber { get; set; }
-
         [DataMember(Name = "street")]
         public string StreetAddress { get; set; }
 
