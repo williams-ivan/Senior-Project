@@ -1,4 +1,13 @@
-﻿using System;
+﻿//**************************************************
+// File: MenuItem.cs
+//
+// Purpose: Contains the information for an item.
+//
+// Written By: Ivan Williams
+//
+// Compiler: Visual Studio 2019
+//**************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +19,7 @@ namespace ConsoleApp
     [DataContract]
     class MenuItem
     {
+        #region Properties
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
@@ -27,5 +37,6 @@ namespace ConsoleApp
 
         [DataMember(Name = "price")]
         public string Price { get; set; }
+        #endregion
     }
 }

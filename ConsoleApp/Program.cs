@@ -1,4 +1,13 @@
-﻿using System;
+﻿//**************************************************
+// File: Program.cs
+//
+// Purpose: Registering and logging an account.
+//
+// Written By: Ivan Williams
+//
+// Compiler: Visual Studio 2019
+//**************************************************
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,8 +23,16 @@ namespace ConsoleApp
     class Program
     {
         static string filename = "data.json";
+
         static string logo = "    :::       ::: :::::::::: :::::::::: :::::::::  :::::::::      :::      ::::::::  :::    ::: \n   :+:       :+: :+:        :+:        :+:    :+: :+:    :+:   :+: :+:   :+:    :+: :+:    :+:  \n  +:+       +:+ +:+        +:+        +:+    +:+ +:+    +:+  +:+   +:+  +:+        +:+    +:+   \n +#+  +:+  +#+ +#++:++#   +#++:++#   +#+    +:+ +#+    +:+ +#++:++#++: +#++:++#++ +#++:++#++    \n+#+ +#+#+ +#+ +#+        +#+        +#+    +#+ +#+    +#+ +#+     +#+        +#+ +#+    +#+     \n#+#+# #+#+#  #+#        #+#        #+#    #+# #+#    #+# #+#     #+# #+#    #+# #+#    #+#      \n###   ###   ########## ########## #########  #########  ###     ###  ########  ###    ###       \n";
+
         static DataList dataStore;
+
+        //**************************************************
+        // Method: save
+        //
+        // Purpose: Saving everything to the database.
+        //**************************************************
         static void save() {
             FileStream writer = new FileStream(filename, FileMode.Create, FileAccess.Write);
 
@@ -25,6 +42,12 @@ namespace ConsoleApp
             ser.WriteObject(writer, dataStore);
             writer.Dispose();
         }
+
+        //**************************************************
+        // Method: cCheck
+        //
+        // Purpose: Checking Customers list for account.
+        //**************************************************
         static bool cCheck(string prop, string val) {
             foreach (Customer c in dataStore.Customers)
             {
@@ -35,6 +58,12 @@ namespace ConsoleApp
             }
             return false;
         }
+
+        //**************************************************
+        // Method: bCheck
+        //
+        // Purpose: Checking Businesses list for account.
+        //**************************************************
         static bool bCheck(string prop, string val)
         {
             foreach (Business b in dataStore.Businesses)
@@ -46,6 +75,12 @@ namespace ConsoleApp
             }
             return false;
         }
+
+        //**************************************************
+        // Method: dCheck
+        //
+        // Purpose: Checking Dashers list for account.
+        //**************************************************
         static bool dCheck(string prop, string val)
         {
             foreach (Person d in dataStore.Dashers)
@@ -57,6 +92,12 @@ namespace ConsoleApp
             }
             return false;
         }
+
+        //**************************************************
+        // Method: checkPass
+        //
+        // Purpose: Checking account's password.
+        //**************************************************
         static bool checkPass(string accountType, string pass)
         {
             bool val = false;
@@ -74,6 +115,12 @@ namespace ConsoleApp
             }
             return val;
         }
+
+        //**************************************************
+        // Method: check
+        //
+        // Purpose: Checking if account exists.
+        //**************************************************
         static bool check(string accountType, string email, string[] args) {
             bool val = false;
             string[] otherTypes = new string[2];
@@ -109,6 +156,12 @@ namespace ConsoleApp
             }
             return val;
         }
+
+        //**************************************************
+        // Method: cRegister
+        //
+        // Purpose: Registering a Customer account.
+        //**************************************************
         static void cRegister() {
             Customer c = new Customer();
             string[] args = { "false" };
@@ -133,6 +186,12 @@ namespace ConsoleApp
                 string wait = Console.ReadLine();
             }
         }
+
+        //**************************************************
+        // Method: bRegister
+        //
+        // Purpose: Registering a Business account.
+        //**************************************************
         static void bRegister()
         {
             Business b = new Business();
@@ -168,6 +227,12 @@ namespace ConsoleApp
                 string wait = Console.ReadLine();
             }
         }
+
+        //**************************************************
+        // Method: dRegister
+        //
+        // Purpose: Registering a Dasher account.
+        //**************************************************
         static void dRegister()
         {
             Person d = new Person();
@@ -193,6 +258,12 @@ namespace ConsoleApp
                 string wait = Console.ReadLine();
             }
         }
+
+        //**************************************************
+        // Method: register
+        //
+        // Purpose: Selecting type of registry.
+        //**************************************************
         static void register() {
             Console.Clear();
             string choice;
@@ -220,6 +291,12 @@ namespace ConsoleApp
             }
             save();
         }
+
+        //**************************************************
+        // Method: getAccount
+        //
+        // Purpose: Getting an account.
+        //**************************************************
         static Account getAccount(string email, string pass) {
             foreach (var property in dataStore.GetType().GetProperties())
             {
@@ -236,6 +313,12 @@ namespace ConsoleApp
             }
             return null;
         }
+
+        //**************************************************
+        // Method: login
+        //
+        // Purpose: Logging in.
+        //**************************************************
         static void login() {
             Console.Clear();
             Account a;
@@ -270,6 +353,13 @@ namespace ConsoleApp
                 string wait = Console.ReadLine();
             }
         }
+
+        //**************************************************
+        // Method: Main
+        //
+        // Purpose: Running the app and prompting for
+        //          registry or login.
+        //**************************************************
         static void Main(string[] args)
         {
             FileStream reader = new FileStream(filename, FileMode.Open, FileAccess.Read);

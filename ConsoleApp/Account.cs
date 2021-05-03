@@ -1,4 +1,14 @@
-﻿using System;
+﻿//**************************************************
+// File: Account.cs
+//
+// Purpose: Contains the information for a general
+//          account.
+//
+// Written By: Ivan Williams
+//
+// Compiler: Visual Studio 2019
+//**************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +20,7 @@ namespace ConsoleApp
     [DataContract]
     class Account
     {
+        #region Properties
         [DataMember(Name = "email")]
         public string Email { get; set; }
 
@@ -18,5 +29,6 @@ namespace ConsoleApp
 
         [DataMember(Name = "phone")]
         public string Phone { get; set; }
+        #endregion
     }
 }

@@ -1,4 +1,13 @@
-﻿using System;
+﻿//**************************************************
+// File: MenuC.cs
+//
+// Purpose: Displays the menu for customers.
+//
+// Written By: Ivan Williams
+//
+// Compiler: Visual Studio 2019
+//**************************************************
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -11,10 +20,25 @@ namespace ConsoleApp
 {
     class MenuC : Menu
     {
+        #region Member Variables
         private ObservableCollection<MenuItem> cart;
+
         private Business mainDispo;
+        #endregion
+
+        #region Properties
         public Customer Customer { get; set; }
+
         public ObservableCollection<Business> Businesses { get; set; }
+        #endregion
+
+        #region Member Methods
+        //**************************************************
+        // Method: Constructor
+        //
+        // Purpose: Initializing the Customer and Businesses
+        //          properties.
+        //**************************************************
         public MenuC(Customer c, ObservableCollection<Business> b)
         {
             Customer = c;
@@ -22,6 +46,12 @@ namespace ConsoleApp
             cart = new ObservableCollection<MenuItem>();
             mainMenu();
         }
+
+        //**************************************************
+        // Method: mainMenu
+        //
+        // Purpose: Displaying the main menu.
+        //**************************************************
         public void mainMenu()
         {
             Console.Clear();
@@ -69,7 +99,15 @@ namespace ConsoleApp
                 mainMenu();
             }
         }
-        private void shop() {
+
+        //**************************************************
+        // Method: shop
+        //
+        // Purpose: Viewing the inventories of dispensaries
+        //          and adding items from them to your cart.
+        //**************************************************
+        private void shop()
+        {
             if (mainDispo == null)
             {
                 mainDispo = getDispo();
@@ -114,6 +152,12 @@ namespace ConsoleApp
                 }
             }
         }
+
+        //**************************************************
+        // Method: getDispo
+        //
+        // Purpose: Getting a dispensary to look through.
+        //**************************************************
         private Business getDispo()
         {
             Business dispo = null;
@@ -212,6 +256,12 @@ namespace ConsoleApp
 
             return dispo;
         }
+
+        //**************************************************
+        // Method: viewInv
+        //
+        // Purpose: Viewing the inventory of a Business.
+        //**************************************************
         private void viewInv(ObservableCollection<MenuItem[]> inv)
         {
             string choice;
@@ -279,6 +329,12 @@ namespace ConsoleApp
                 }
             } while (choice != "0");
         }
+
+        //**************************************************
+        // Method: viewItem
+        //
+        // Purpose: Displaying an item's information.
+        //**************************************************
         private void viewItem(MenuItem item)
         {
             Console.Clear();
@@ -320,7 +376,14 @@ namespace ConsoleApp
                 }
             }
         }
-        private string getTotalPrice() {
+
+        //**************************************************
+        // Method: getTotalPrice
+        //
+        // Purpose: Getting the total price of an order.
+        //**************************************************
+        private string getTotalPrice()
+        {
             double price = 0;
             foreach (MenuItem item in cart)
             {
@@ -328,7 +391,14 @@ namespace ConsoleApp
             }
             return price.ToString();
         }
-        private Address getAddress(int option) {
+
+        //**************************************************
+        // Method: getAddress
+        //
+        // Purpose: Getting the address to deliver to.
+        //**************************************************
+        private Address getAddress(int option)
+        {
             Address a = null;
             if (option == 1) {
                 ObservableCollection<Address[]> list = new ObservableCollection<Address[]>();
@@ -428,6 +498,12 @@ namespace ConsoleApp
             }
             return a;
         }
+
+        //**************************************************
+        // Method: viewCart
+        //
+        // Purpose: Viewing and editing the cart.
+        //**************************************************
         private void viewCart()
         {
             string choice;
@@ -510,6 +586,12 @@ namespace ConsoleApp
                 mainDispo = null;
             }
         }
+
+        //**************************************************
+        // Method: viewOrders
+        //
+        // Purpose: Viewing order history.
+        //**************************************************
         private void viewOrders()
         {
             int n = 1;
@@ -631,6 +713,12 @@ namespace ConsoleApp
                 }
             } while (choice != "0");
         }
+
+        //**************************************************
+        // Method: viewAccount
+        //
+        // Purpose: Displaying the Customer's account info.
+        //**************************************************
         protected override void viewAccount()
         {
             Console.Clear();
@@ -645,5 +733,6 @@ namespace ConsoleApp
             }
             string wait = Console.ReadLine();
         }
+        #endregion
     }
 }

@@ -1,4 +1,13 @@
-﻿using System;
+﻿//**************************************************
+// File: MenuB.cs
+//
+// Purpose: Displays the menu for businesses.
+//
+// Written By: Ivan Williams
+//
+// Compiler: Visual Studio 2019
+//**************************************************
+using System;
 using System.Collections.ObjectModel;
 using System.Reflection;
 
@@ -6,15 +15,32 @@ namespace ConsoleApp
 {
     class MenuB : Menu
     {
+        #region Properties
         public Business Business { get; set; }
+
         public ObservableCollection<Business> Others { get; set; }
+        #endregion
+
+        #region Member Methods
+        //**************************************************
+        // Method: Constructor
+        //
+        // Purpose: Initializing the Business and Others
+        //          properties.
+        //**************************************************
         public MenuB(Business b, ObservableCollection<Business> o)
         {
             Business = b;
             Others = o;
             mainMenu();
         }
-        public void mainMenu()
+
+        //**************************************************
+        // Method: mainMenu
+        //
+        // Purpose: Displaying the main menu.
+        //**************************************************
+        public override void mainMenu()
         {
             Console.Clear();
             int choice;
@@ -45,6 +71,13 @@ namespace ConsoleApp
                 mainMenu();
             }
         }
+
+        //**************************************************
+        // Method: check
+        //
+        // Purpose: Checking if an item exists based on the
+        //          name of the item.
+        //**************************************************
         private bool check(string name) {
             foreach (MenuItem item in Business.Items)
             {
@@ -55,6 +88,13 @@ namespace ConsoleApp
             }
             return false;
         }
+
+        //**************************************************
+        // Method: addItem
+        //
+        // Purpose: Adding an item to a Business's
+        //          inventory.
+        //**************************************************
         private void addItem()
         {
             Console.Clear();
@@ -90,6 +130,13 @@ namespace ConsoleApp
             }
             string wait = Console.ReadLine();
         }
+
+        //**************************************************
+        // Method: viewDispos
+        //
+        // Purpose: Viewing other businesses and their
+        //          inventories.
+        //**************************************************
         private void viewDispos()
         {
             ObservableCollection<Business[]> list = new ObservableCollection<Business[]>();
@@ -189,6 +236,12 @@ namespace ConsoleApp
                 }
             } while (choice != "0");
         }
+
+        //**************************************************
+        // Method: viewInv
+        //
+        // Purpose: Viewing the inventory of a Business.
+        //**************************************************
         private void viewInv(Business dispo)
         {
             ObservableCollection<MenuItem[]> inv = new ObservableCollection<MenuItem[]>();
@@ -280,6 +333,12 @@ namespace ConsoleApp
                 }
             } while (choice != "0");
         }
+
+        //**************************************************
+        // Method: viewItem
+        //
+        // Purpose: Displaying an item's information.
+        //**************************************************
         private void viewItem(MenuItem item, bool main)
         {
             Console.Clear();
@@ -312,6 +371,12 @@ namespace ConsoleApp
                 string wait = Console.ReadLine();
             }
         }
+
+        //**************************************************
+        // Method: viewAccount
+        //
+        // Purpose: Displaying the Business's account info.
+        //**************************************************
         protected override void viewAccount()
         {
             Console.Clear();
@@ -326,5 +391,6 @@ namespace ConsoleApp
             }
             string wait = Console.ReadLine();
         }
+        #endregion
     }
 }

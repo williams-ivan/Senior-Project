@@ -1,4 +1,13 @@
-﻿using System;
+﻿//**************************************************
+// File: MenuD.cs
+//
+// Purpose: Displays the menu for dashers.
+//
+// Written By: Ivan Williams
+//
+// Compiler: Visual Studio 2019
+//**************************************************
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,15 +19,32 @@ namespace ConsoleApp
 {
     class MenuD : Menu
     {
+        #region Properties
         public Person Dasher { get; set; }
+
         public ObservableCollection<Customer> Customers { get; set; }
+        #endregion
+
+        #region Member Methods
+        //**************************************************
+        // Method: Constructor
+        //
+        // Purpose: Initializing the Dasher and Customers
+        //          properties.
+        //**************************************************
         public MenuD(Person d, ObservableCollection<Customer> c)
         {
             Dasher = d;
             Customers = c;
             mainMenu();
         }
-        public void mainMenu()
+
+        //**************************************************
+        // Method: mainMenu
+        //
+        // Purpose: Displaying the main menu.
+        //**************************************************
+        public override void mainMenu()
         {
             Console.Clear();
             int choice;
@@ -51,6 +77,12 @@ namespace ConsoleApp
                 mainMenu();
             }
         }
+
+        //**************************************************
+        // Method: viewOrders
+        //
+        // Purpose: Viewing orders to claim and deliver.
+        //**************************************************
         private void viewOrders(string type)
         {
             int n = 0;
@@ -182,6 +214,12 @@ namespace ConsoleApp
                 }
             } while (choice != "0");
         }
+
+        //**************************************************
+        // Method: viewAccount
+        //
+        // Purpose: Displaying the Dasher's account info.
+        //**************************************************
         protected override void viewAccount()
         {
             Console.Clear();
@@ -196,5 +234,6 @@ namespace ConsoleApp
             }
             string wait = Console.ReadLine();
         }
+        #endregion
     }
 }
