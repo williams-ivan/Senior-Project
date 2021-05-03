@@ -269,10 +269,11 @@ namespace ConsoleApp
             do
             {
                 Console.Clear();
-                string[] choices = new string[9];
+                string[] choices = new string[10];
                 choices[0] = "<";
                 choices[1] = ">";
                 choices[2] = "0";
+                choices[3] = "s";
 
                 Console.WriteLine(mainDispo.Name + "'s Inventory");
                 Console.WriteLine("\t\t\t\tPage " + (index + 1));
@@ -283,14 +284,16 @@ namespace ConsoleApp
                     if (item != null)
                     {
                         Console.WriteLine(counter + ". " + item.Name);
-                        choices[counter + 2] = counter.ToString();
+                        choices[counter + 3] = counter.ToString();
                         counter++;
                     }
                 }
                 Console.WriteLine("0. Exit");
+                Console.WriteLine("------------------------------------");
+                Console.WriteLine("or (S)earch for items");
                 Console.WriteLine("====================================");
                 Console.Write("Enter selection (type '<'/'>' to switch pages): ");
-                choice = Console.ReadLine();
+                choice = Console.ReadLine().ToLower();
                 while (Array.Find(choices, c => c == choice) == null)
                 {
                     Console.Write("Invalid. Re-enter selection: ");
@@ -318,6 +321,10 @@ namespace ConsoleApp
                     {
                         index = 0;
                     }
+                }
+                else if (choice == "s")
+                {
+                    search();
                 }
                 else
                 {
@@ -375,6 +382,65 @@ namespace ConsoleApp
                     string wait = Console.ReadLine();
                 }
             }
+        }
+
+        //**************************************************
+        // Method: search
+        //
+        // Purpose: Searching through an inventory.
+        //**************************************************
+        private void search()
+        {
+            Console.Clear();
+            int choice, count = 0;
+            double max = 0;
+            string keyword = "";
+            Console.WriteLine("Search by");
+            Console.WriteLine("1. Name");
+            Console.WriteLine("2. Type");
+            Console.WriteLine("3. Price");
+            choice = getChoice(1, 3);
+            if (choice == 3)
+            {
+                bool success;
+                do
+                {
+                    Console.Write("Enter maximum price: ");
+                    success = double.TryParse(Console.ReadLine(), out max);
+                } while (!success || max < 0);
+            }
+            else
+            {
+                Console.Write("Enter keyword(s): ");
+                keyword = Console.ReadLine().ToLower();
+            }
+
+            ObservableCollection<MenuItem[]> inv = new ObservableCollection<MenuItem[]>();
+            MenuItem[] arr = new MenuItem[6];
+
+            foreach (MenuItem item in mainDispo.Items)
+            {
+                if ((choice == 3) ? Convert.ToDouble(item.Price) <= max : (choice == 2) ? item.Type.ToLower().Contains(keyword) : item.Name.ToLower().Contains(keyword))
+                {
+                    if (count > 5)
+                    {
+                        inv.Add(arr);
+                        count = 0;
+                        arr = null;
+                    }
+                    if (count == 0 && arr == null)
+                    {
+                        arr = new MenuItem[6];
+                    }
+                    arr[count] = item;
+                    count++;
+                }
+            }
+            if (arr != null)
+            {
+                inv.Add(arr);
+            }
+            viewInv(inv);
         }
 
         //**************************************************

@@ -28,7 +28,7 @@ namespace ConsoleApp
             int choice;
             Console.Write("Enter selection: ");
             bool success = int.TryParse(Console.ReadLine(), out choice);
-            while (success && (choice > max || choice < min))
+            while (!success || (choice > max || choice < min))
             {
                 Console.Write("Invalid. Re-enter selection: ");
                 success = int.TryParse(Console.ReadLine(), out choice);
