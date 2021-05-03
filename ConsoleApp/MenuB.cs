@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace ConsoleApp
 {
-    class MenuB
+    class MenuB : Menu
     {
         public Business Business { get; set; }
         public ObservableCollection<Business> Others { get; set; }
@@ -23,9 +23,10 @@ namespace ConsoleApp
             Console.WriteLine("1. Add Item");
             Console.WriteLine("2. View Inventory");
             Console.WriteLine("3. View Dispensaries");
-            Console.WriteLine("4. Log Out");
+            Console.WriteLine("4. View Account Information");
+            Console.WriteLine("5. Log Out");
             Console.WriteLine("====================================");
-            choice = getChoice(1, 4);
+            choice = getChoice(1, 5);
             switch (choice) {
                 case 1:
                     addItem();
@@ -37,23 +38,12 @@ namespace ConsoleApp
                     viewDispos();
                     break;
                 case 4:
+                    viewAccount();
                     break;
             }
-            if (choice != 4) {
+            if (choice != 5) {
                 mainMenu();
             }
-        }
-        private int getChoice(int min, int max)
-        {
-            int choice;
-            Console.Write("Enter selection: ");
-            bool success = int.TryParse(Console.ReadLine(), out choice);
-            while (success && (choice > max || choice < min))
-            {
-                Console.Write("Invalid. Re-enter selection: ");
-                success = int.TryParse(Console.ReadLine(), out choice);
-            }
-            return choice;
         }
         private bool check(string name) {
             foreach (MenuItem item in Business.Items)
@@ -321,6 +311,20 @@ namespace ConsoleApp
             {
                 string wait = Console.ReadLine();
             }
+        }
+        protected override void viewAccount()
+        {
+            Console.Clear();
+            Console.WriteLine("Your Account\n");
+            PropertyInfo[] properties = typeof(Business).GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                if (property.Name != "Items")
+                {
+                    Console.WriteLine(property.Name + ": " + property.GetValue(Business));
+                }
+            }
+            string wait = Console.ReadLine();
         }
     }
 }

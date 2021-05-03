@@ -14,6 +14,7 @@ namespace ConsoleApp
     class Program
     {
         static string filename = "data.json";
+        static string logo = "    :::       ::: :::::::::: :::::::::: :::::::::  :::::::::      :::      ::::::::  :::    ::: \n   :+:       :+: :+:        :+:        :+:    :+: :+:    :+:   :+: :+:   :+:    :+: :+:    :+:  \n  +:+       +:+ +:+        +:+        +:+    +:+ +:+    +:+  +:+   +:+  +:+        +:+    +:+   \n +#+  +:+  +#+ +#++:++#   +#++:++#   +#+    +:+ +#+    +:+ +#++:++#++: +#++:++#++ +#++:++#++    \n+#+ +#+#+ +#+ +#+        +#+        +#+    +#+ +#+    +#+ +#+     +#+        +#+ +#+    +#+     \n#+#+# #+#+#  #+#        #+#        #+#    #+# #+#    #+# #+#     #+# #+#    #+# #+#    #+#      \n###   ###   ########## ########## #########  #########  ###     ###  ########  ###    ###       \n";
         static DataList dataStore;
         static void save() {
             FileStream writer = new FileStream(filename, FileMode.Create, FileAccess.Write);
@@ -293,7 +294,8 @@ namespace ConsoleApp
                 Console.Clear();
                 do
                 {
-                    Console.WriteLine("(L)ogin or (R)egister?");
+                    Console.WriteLine(logo);
+                    Console.WriteLine("\n\n\n(L)ogin or (R)egister?");
                     choice = Console.ReadLine().ToLower();
                     Console.Write((choice != "l" && choice != "r") ? "Invalid. " : "");
                 } while (choice != "l" && choice != "r");

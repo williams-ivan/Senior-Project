@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp
 {
-    class MenuD
+    class MenuD : Menu
     {
         public Person Dasher { get; set; }
         public ObservableCollection<Customer> Customers { get; set; }
@@ -27,15 +27,10 @@ namespace ConsoleApp
             Console.WriteLine("1. View Orders Available");
             Console.WriteLine("2. View Orders Taken");
             Console.WriteLine("3. View Orders Delivered");
-            Console.WriteLine("4. Log Out");
+            Console.WriteLine("4. View Account Information");
+            Console.WriteLine("5. Log Out");
             Console.WriteLine("====================================");
-            Console.Write("Enter selection: ");
-            choice = int.Parse(Console.ReadLine());
-            while (choice > 4 || choice < 1)
-            {
-                Console.Write("Invalid. Re-enter selection: ");
-                choice = int.Parse(Console.ReadLine());
-            }
+            choice = getChoice(1, 5);
             switch (choice)
             {
                 case 1:
@@ -47,8 +42,11 @@ namespace ConsoleApp
                 case 3:
                     viewOrders("done");
                     break;
+                case 4:
+                    viewAccount();
+                    break;
             }
-            if (choice != 4)
+            if (choice != 5)
             {
                 mainMenu();
             }
@@ -183,6 +181,20 @@ namespace ConsoleApp
                     string wait = Console.ReadLine();
                 }
             } while (choice != "0");
+        }
+        protected override void viewAccount()
+        {
+            Console.Clear();
+            Console.WriteLine("Your Account\n");
+            PropertyInfo[] properties = typeof(Person).GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                if (property.Name != "Addresses")
+                {
+                    Console.WriteLine(property.Name + ": " + property.GetValue(Dasher));
+                }
+            }
+            string wait = Console.ReadLine();
         }
     }
 }

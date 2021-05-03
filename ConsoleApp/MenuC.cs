@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp
 {
-    class MenuC
+    class MenuC : Menu
     {
         private ObservableCollection<MenuItem> cart;
         private Business mainDispo;
@@ -31,9 +31,10 @@ namespace ConsoleApp
             Console.WriteLine("1. Shop");
             Console.WriteLine("2. View Cart");
             Console.WriteLine("3. View Order History");
-            Console.WriteLine("4. Log Out");
+            Console.WriteLine("4. View Account Information");
+            Console.WriteLine("5. Log Out");
             Console.WriteLine("====================================");
-            choice = getChoice(1, 4);
+            choice = getChoice(1, 5);
             switch (choice)
             {
                 case 1:
@@ -60,23 +61,13 @@ namespace ConsoleApp
                     }
                     break;
                 case 4:
+                    viewAccount();
                     break;
             }
-            if (choice != 4)
+            if (choice != 5)
             {
                 mainMenu();
             }
-        }
-        private int getChoice(int min, int max) {
-            int choice;
-            Console.Write("Enter selection: ");
-            bool success = int.TryParse(Console.ReadLine(), out choice);
-            while (success && (choice > max || choice < min))
-            {
-                Console.Write("Invalid. Re-enter selection: ");
-                success = int.TryParse(Console.ReadLine(), out choice);
-            }
-            return choice;
         }
         private void shop() {
             if (mainDispo == null)
@@ -302,6 +293,7 @@ namespace ConsoleApp
                 }
             }
             Console.WriteLine("------------------------------------");
+            Console.WriteLine("**Warning: Once you add items to your cart, you cannot change dispensaries until your cart is empty again.");
             Console.WriteLine("1. Add to Cart");
             Console.WriteLine("2. Cancel");
             Console.WriteLine("====================================");
@@ -638,6 +630,20 @@ namespace ConsoleApp
                     }
                 }
             } while (choice != "0");
+        }
+        protected override void viewAccount()
+        {
+            Console.Clear();
+            Console.WriteLine("Your Account\n");
+            PropertyInfo[] properties = typeof(Customer).GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                if (property.Name != "Addresses" && property.Name != "Orders")
+                {
+                    Console.WriteLine(property.Name + ": " + property.GetValue(Customer));
+                }
+            }
+            string wait = Console.ReadLine();
         }
     }
 }

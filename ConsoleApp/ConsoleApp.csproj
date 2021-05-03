@@ -54,6 +54,7 @@
     <Compile Include="Business.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="DataList.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="MenuB.cs" />
     <Compile Include="MenuC.cs" />
     <Compile Include="MenuD.cs" />
