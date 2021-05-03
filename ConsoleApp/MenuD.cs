@@ -94,7 +94,7 @@ namespace ConsoleApp
                     {
                         choices[i + 2] = i.ToString();
                     }
-                    Console.Write("Enter selection (arrow keys to switch pages): ");
+                    Console.Write("Enter selection (type '<'/'>' to switch pages): ");
                     choice = Console.ReadLine();
                     while (Array.Find(choices, c => c == choice) == null)
                     {
@@ -108,12 +108,20 @@ namespace ConsoleApp
                         {
                             n--;
                         }
+                        else
+                        {
+                            n = Customers.Count - 1;
+                        }
                     }
                     else if (choice == ">")
                     {
                         if (n < Customers.Count - 1)
                         {
                             n++;
+                        }
+                        else
+                        {
+                            n = 0;
                         }
                     }
                     else if (choice != "0")

@@ -10,8 +10,6 @@ namespace ConsoleApp
     [DataContract]
     class Address
     {
-        public Address() { }
-
         [DataMember(Name = "street")]
         public string StreetAddress { get; set; }
 

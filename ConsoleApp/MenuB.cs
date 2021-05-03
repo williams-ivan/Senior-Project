@@ -68,6 +68,7 @@ namespace ConsoleApp
         private void addItem()
         {
             Console.Clear();
+            Console.WriteLine("Please enter the following information as it appears");
             MenuItem item = new MenuItem();
             PropertyInfo[] properties = typeof(MenuItem).GetProperties();
             foreach (PropertyInfo property in properties)
@@ -150,7 +151,7 @@ namespace ConsoleApp
                 }
                 Console.WriteLine("0. Exit");
                 Console.WriteLine("====================================");
-                Console.Write("Enter selection (arrow keys to switch pages): ");
+                Console.Write("Enter selection (type '<'/'>' to switch pages): ");
                 choice = Console.ReadLine();
                 while (Array.Find(choices, c => c == choice) == null)
                 {
@@ -249,7 +250,7 @@ namespace ConsoleApp
                 }
                 Console.WriteLine("0. Exit");
                 Console.WriteLine("====================================");
-                Console.Write("Enter selection (arrow keys to switch pages): ");
+                Console.Write("Enter selection (type '<'/'>' to switch pages): ");
                 choice = Console.ReadLine();
                 while (Array.Find(choices, c => c == choice) == null)
                 {

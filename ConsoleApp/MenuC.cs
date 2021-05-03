@@ -171,7 +171,7 @@ namespace ConsoleApp
                 }
                 Console.WriteLine("0. Exit");
                 Console.WriteLine("====================================");
-                Console.Write("Enter selection (arrow keys to switch pages): ");
+                Console.Write("Enter selection (type '<'/'>' to switch pages): ");
                 choice = Console.ReadLine();
                 while (Array.Find(choices, c => c == choice) == null)
                 {
@@ -185,12 +185,20 @@ namespace ConsoleApp
                     {
                         count--;
                     }
+                    else
+                    {
+                        count = list.Count - 1;
+                    }
                 }
                 else if (choice == ">")
                 {
                     if (count < list.Count - 1)
                     {
                         count++;
+                    }
+                    else
+                    {
+                        count = 0;
                     }
                 }
                 else
@@ -240,7 +248,7 @@ namespace ConsoleApp
                 }
                 Console.WriteLine("0. Exit");
                 Console.WriteLine("====================================");
-                Console.Write("Enter selection (arrow keys to switch pages): ");
+                Console.Write("Enter selection (type '<'/'>' to switch pages): ");
                 choice = Console.ReadLine();
                 while (Array.Find(choices, c => c == choice) == null)
                 {
@@ -254,12 +262,20 @@ namespace ConsoleApp
                     {
                         index--;
                     }
+                    else
+                    {
+                        index = inv.Count - 1;
+                    }
                 }
                 else if (choice == ">")
                 {
                     if (index < inv.Count - 1)
                     {
                         index++;
+                    }
+                    else
+                    {
+                        index = 0;
                     }
                 }
                 else
@@ -293,7 +309,17 @@ namespace ConsoleApp
             if (choice == 1) {
                 if (cart.Count < 10)
                 {
-                    cart.Add(item);
+                    int amount;
+                    bool success;
+                    do
+                    {
+                        Console.Write("Enter amount (your cart cannot exceed 10 items): ");
+                        success = int.TryParse(Console.ReadLine(), out amount);
+                    } while (!success && (amount > 10 || amount < 1));
+                    for (int i = 0; i < amount; i++)
+                    {
+                        cart.Add(item);
+                    }
                 }
                 else
                 {
@@ -353,13 +379,13 @@ namespace ConsoleApp
                     {
                         if (addy != null)
                         {
-                            Console.WriteLine("{0}. {1}\n\t{2}, {3}\t{4}", counter, addy.StreetAddress, addy.City, addy.State, addy.ZipCode);
+                            Console.WriteLine(counter + ". " + addy);
                             choices[counter + 2] = counter.ToString();
                             counter++;
                         }
                     }
                     Console.WriteLine("====================================");
-                    Console.Write("Enter selection (arrow keys to switch pages): ");
+                    Console.Write("Enter selection (type '<'/'>' to switch pages): ");
                     choice = Console.ReadLine();
                     while (Array.Find(choices, c => c == choice) == null)
                     {
@@ -373,12 +399,20 @@ namespace ConsoleApp
                         {
                             count--;
                         }
+                        else
+                        {
+                            count = list.Count - 1;
+                        }
                     }
                     else if (choice == ">")
                     {
                         if (count < list.Count - 1)
                         {
                             count++;
+                        }
+                        else
+                        {
+                            count = 0;
                         }
                     }
                     else

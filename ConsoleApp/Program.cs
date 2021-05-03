@@ -202,6 +202,9 @@ namespace ConsoleApp
                 Console.Write((choice != "b" && choice != "c" && choice != "d") ? "Invalid. " : "");
             } while (choice != "b" && choice != "c" && choice != "d");
 
+            Console.Clear();
+            Console.WriteLine("Please enter the following information as it appears");
+
             switch (choice)
             {
                 case "b":
