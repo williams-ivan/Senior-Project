@@ -26,5 +26,10 @@ namespace ConsoleApp
 
         [DataMember(Name = "zip")]
         public string ZipCode { get; set; }
+
+        public override string ToString()
+        {
+            return StreetAddress + "\n\t" + City + ", " + State + "\t" + ZipCode;
+        }
     }
 }

@@ -29,5 +29,10 @@ namespace ConsoleApp
         {
             Items = new ObservableCollection<MenuItem>();
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

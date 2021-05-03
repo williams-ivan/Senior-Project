@@ -62,7 +62,7 @@ namespace ConsoleApp
                 ObservableCollection<Order> temp = new ObservableCollection<Order>();
                 foreach (Order o in Customers[n].Orders)
                 {
-                    if ((type == "done") ? ((o.Status == "Delivered" || o.Status == "Completed") && o.Dasher == Dasher.Email) : (type == "taken") ? (o.Status == "In Progress" && o.Dasher == Dasher.Email) : (o.Status == "Pending"))
+                    if ((type == "done") ? ((o.Status == "Delivered" || o.Status == "Completed") && o.Dasher == Dasher) : (type == "taken") ? (o.Status == "In Progress" && o.Dasher == Dasher) : (o.Status == "Pending"))
                     {
                         temp.Add(o);
                     }
@@ -125,9 +125,12 @@ namespace ConsoleApp
                         PropertyInfo[] properties = typeof(Order).GetProperties();
                         foreach (PropertyInfo property in properties)
                         {
-                            if (property.Name == "Address")
+                            if (property.Name == "DasherShare")
                             {
-                                Console.WriteLine("Address: {0}\n\t{1}, {2}\t{3}", temp[index].Address.StreetAddress, temp[index].Address.City, temp[index].Address.State, temp[index].Address.ZipCode);
+                                double share = Convert.ToDouble(property.GetValue(temp[index]));
+                                share *= Convert.ToDouble(temp[index].TotalPrice);
+                                Console.WriteLine("DasherShare: $" + share);
+
                             }
                             else if (property.Name != "Items")
                             {
@@ -141,10 +144,10 @@ namespace ConsoleApp
                             do
                             {
                                 Console.WriteLine(((type == "taken") ? "Delivered" : "Claim") + "? (Y/N)");
-                                answer = Console.ReadLine();
-                                Console.Write((answer.ToLower() != "y" && answer.ToLower() != "n") ? "Invalid. " : "");
-                            } while (answer.ToLower() != "y" && answer.ToLower() != "n");
-                            if (answer.ToLower() == "y")
+                                answer = Console.ReadLine().ToLower();
+                                Console.Write((answer != "y" && answer != "n") ? "Invalid. " : "");
+                            } while (answer != "y" && answer != "n");
+                            if (answer == "y")
                             {
                                 if (type == "taken")
                                 {
@@ -153,7 +156,7 @@ namespace ConsoleApp
                                 }
                                 else
                                 {
-                                    temp[index].Dasher = Dasher.Email;
+                                    temp[index].Dasher = Dasher;
                                     temp[index].Status = "In Progress";
                                     Console.WriteLine("Delivery In Progress");
                                 }

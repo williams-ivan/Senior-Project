@@ -70,11 +70,11 @@ namespace ConsoleApp
         private int getChoice(int min, int max) {
             int choice;
             Console.Write("Enter selection: ");
-            choice = int.Parse(Console.ReadLine());
-            while (choice > max || choice < min)
+            bool success = int.TryParse(Console.ReadLine(), out choice);
+            while (success && (choice > max || choice < min))
             {
                 Console.Write("Invalid. Re-enter selection: ");
-                choice = int.Parse(Console.ReadLine());
+                success = int.TryParse(Console.ReadLine(), out choice);
             }
             return choice;
         }
@@ -430,15 +430,15 @@ namespace ConsoleApp
                 Console.WriteLine("====================================");
                 Console.WriteLine("Options: (B)ack, (C)lear, Check(O)ut");
                 Console.Write("Enter item number or option above: ");
-                choice = Console.ReadLine();
-                while (Array.Find(choices, c => c.ToLower() == choice) == null)
+                choice = Console.ReadLine().ToLower();
+                while (Array.Find(choices, c => c == choice) == null)
                 {
                     Console.Write("Invalid. Re-enter selection: ");
                     choice = Console.ReadLine();
                 }
-                if (choice.ToLower() == "o" || choice.ToLower() == "c")
+                if (choice == "o" || choice == "c")
                 {
-                    if (choice.ToLower() == "o")
+                    if (choice == "o")
                     {
                         Address a;
                         if (Customer.Addresses.Count == 0)
@@ -458,7 +458,7 @@ namespace ConsoleApp
                         o.TotalPrice = getTotalPrice();
                         o.DasherShare = "0.15";
                         o.Status = "Pending";
-                        o.Business = mainDispo.Email;
+                        o.Business = mainDispo;
                         o.Address = a;
                         foreach (MenuItem item in cart)
                         {
@@ -468,7 +468,7 @@ namespace ConsoleApp
                     }
                     cart.Clear();
                 }
-                else if (choice.ToLower() != "b")
+                else if (choice != "b")
                 {
                     int answer, n = Convert.ToInt32(choice) - 1;
                     Console.WriteLine("1. Remove from Cart");
@@ -479,7 +479,7 @@ namespace ConsoleApp
                         cart.RemoveAt(n);
                     }
                 }
-            } while (choice.ToLower() != "b" && cart.Count > 0);
+            } while (choice != "b" && cart.Count > 0);
             if (cart.Count == 0) {
                 mainDispo = null;
             }
@@ -553,10 +553,6 @@ namespace ConsoleApp
                                     Console.WriteLine(p.Name + ": " + ((p.Name == "Price") ? "$" : "") + p.GetValue(item));
                                 }
                             }
-                        }
-                        else if (property.Name == "Address")
-                        {
-                            Console.WriteLine("Address: {0}\n\t{1}, {2}\t{3}", Customer.Orders[index].Address.StreetAddress, Customer.Orders[index].Address.City, Customer.Orders[index].Address.State, Customer.Orders[index].Address.ZipCode);
                         }
                         else if (property.Name != "DasherShare")
                         {

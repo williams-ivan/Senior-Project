@@ -24,10 +24,10 @@ namespace ConsoleApp
         public string Status { get; set; }
 
         [DataMember(Name = "business")]
-        public string Business { get; set; }
+        public Business Business { get; set; }
 
         [DataMember(Name = "dasher")]
-        public string Dasher { get; set; }
+        public Person Dasher { get; set; }
 
         [DataMember(Name = "address")]
         public Address Address { get; set; }

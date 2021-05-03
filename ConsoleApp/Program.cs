@@ -198,9 +198,9 @@ namespace ConsoleApp
             do
             {
                 Console.WriteLine("(C)ustomer, (B)usiness, or (D)asher?");
-                choice = Console.ReadLine();
-                Console.Write((choice.ToLower() != "b" && choice.ToLower() != "c" && choice.ToLower() != "d") ? "Invalid. " : "");
-            } while (choice.ToLower() != "b" && choice.ToLower() != "c" && choice.ToLower() != "d");
+                choice = Console.ReadLine().ToLower();
+                Console.Write((choice != "b" && choice != "c" && choice != "d") ? "Invalid. " : "");
+            } while (choice != "b" && choice != "c" && choice != "d");
 
             switch (choice)
             {
@@ -291,9 +291,9 @@ namespace ConsoleApp
                 do
                 {
                     Console.WriteLine("(L)ogin or (R)egister?");
-                    choice = Console.ReadLine();
-                    Console.Write((choice.ToLower() != "l" && choice.ToLower() != "r") ? "Invalid. " : "");
-                } while (choice.ToLower() != "l" && choice.ToLower() != "r");
+                    choice = Console.ReadLine().ToLower();
+                    Console.Write((choice != "l" && choice != "r") ? "Invalid. " : "");
+                } while (choice != "l" && choice != "r");
                 switch (choice)
                 {
                     case "r":
@@ -305,9 +305,9 @@ namespace ConsoleApp
                 }
                 save();
                 Console.WriteLine("Continue? (Y/N)");
-                answer = Console.ReadLine();
-                Console.Write((answer.ToLower() != "y" && answer.ToLower() != "n") ? "Invalid. " : "");
-            } while (answer.ToLower() != "n");
+                answer = Console.ReadLine().ToLower();
+                Console.Write((answer != "y" && answer != "n") ? "Invalid. " : "");
+            } while (answer != "n");
         }
     }
 }

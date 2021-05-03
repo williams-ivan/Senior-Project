@@ -47,11 +47,11 @@ namespace ConsoleApp
         {
             int choice;
             Console.Write("Enter selection: ");
-            choice = int.Parse(Console.ReadLine());
-            while (choice > max || choice < min)
+            bool success = int.TryParse(Console.ReadLine(), out choice);
+            while (success && (choice > max || choice < min))
             {
                 Console.Write("Invalid. Re-enter selection: ");
-                choice = int.Parse(Console.ReadLine());
+                success = int.TryParse(Console.ReadLine(), out choice);
             }
             return choice;
         }
@@ -72,8 +72,21 @@ namespace ConsoleApp
             PropertyInfo[] properties = typeof(MenuItem).GetProperties();
             foreach (PropertyInfo property in properties)
             {
+                string input;
                 Console.Write(property.Name + ": ");
-                property.SetValue(item, Console.ReadLine());
+                input = Console.ReadLine();
+                property.SetValue(item, input);
+                if (property.Name == "Price") {
+                    double tryDouble;
+                    bool success = double.TryParse(input, out tryDouble);
+                    while (!success)
+                    {
+                        Console.Write(property.Name + ": ");
+                        input = Console.ReadLine();
+                        property.SetValue(item, input);
+                        success = double.TryParse(input, out tryDouble);
+                    }
+                }
             }
             if (!check(item.Name))
             {
