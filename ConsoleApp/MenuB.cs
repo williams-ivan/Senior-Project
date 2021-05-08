@@ -110,7 +110,7 @@ namespace ConsoleApp
                 if (property.Name == "Price") {
                     double tryDouble;
                     bool success = double.TryParse(input, out tryDouble);
-                    while (!success)
+                    while (!success || tryDouble < 0.01)
                     {
                         Console.Write(property.Name + ": ");
                         input = Console.ReadLine();
@@ -238,14 +238,14 @@ namespace ConsoleApp
         }
 
         //**************************************************
-        // Method: viewInv
+        // Method: getInv
         //
-        // Purpose: Viewing the inventory of a Business.
+        // Purpose: Getting the inventory of a Business.
         //**************************************************
-        private void viewInv(Business dispo)
+        private ObservableCollection<MenuItem[]> getInv(Business dispo)
         {
-            ObservableCollection<MenuItem[]> inv = new ObservableCollection<MenuItem[]>();
             int count = 0;
+            ObservableCollection<MenuItem[]> inv = new ObservableCollection<MenuItem[]>();
             MenuItem[] arr = new MenuItem[6];
 
             foreach (MenuItem item in dispo.Items)
@@ -267,7 +267,18 @@ namespace ConsoleApp
             {
                 inv.Add(arr);
             }
-            count = 0;
+            return inv;
+        }
+
+        //**************************************************
+        // Method: viewInv
+        //
+        // Purpose: Viewing the inventory of a Business.
+        //**************************************************
+        private void viewInv(Business dispo)
+        {
+            int count = 0;
+            ObservableCollection<MenuItem[]> inv = getInv(dispo);
 
             string choice;
             do
@@ -329,6 +340,7 @@ namespace ConsoleApp
                     if (n < 7 && n > 0)
                     {
                         viewItem(inv[count][n - 1], dispo == Business);
+                        inv = getInv(dispo);
                     }
                 }
             } while (choice != "0");
