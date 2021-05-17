@@ -356,7 +356,7 @@ namespace ConsoleApp
                 }
             }
             Console.WriteLine("------------------------------------");
-            Console.WriteLine("**Warning: Once you add items to your cart, you cannot change dispensaries until your cart is empty again.");
+            Console.WriteLine("**Warning: Once you add items to your cart,\n\tyou cannot change dispensaries until your cart is empty again.\n");
             Console.WriteLine("1. Add to Cart");
             Console.WriteLine("2. Cancel");
             Console.WriteLine("====================================");
@@ -680,7 +680,7 @@ namespace ConsoleApp
                         {
                             Console.WriteLine("------------------------------------");
                         }
-                        Console.WriteLine("{0}. {1} {2} {3}", i, Customer.Orders[i - 1].TotalPrice, Customer.Orders[i - 1].Date, Customer.Orders[i - 1].Status);
+                        Console.WriteLine("{0}. ${1} {2} {3}", i, Customer.Orders[i - 1].TotalPrice, Customer.Orders[i - 1].Date, Customer.Orders[i - 1].Status);
                         choices[(i - n) + 3] = i.ToString();
                     }
                 }
