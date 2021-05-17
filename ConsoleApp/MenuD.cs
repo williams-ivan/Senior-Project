@@ -90,19 +90,24 @@ namespace ConsoleApp
             do
             {
                 ObservableCollection<Order> temp = new ObservableCollection<Order>();
-                foreach (Order o in Customers[n].Orders)
-                {
-                    if ((type == "done") ? ((o.Status == "Delivered" || o.Status == "Completed") && o.Dasher == Dasher) : (type == "taken") ? (o.Status == "In Progress" && o.Dasher == Dasher) : (o.Status == "Pending"))
+                do {
+                    foreach (Order o in Customers[n].Orders)
                     {
-                        temp.Add(o);
+                        if ((type == "done") ? ((o.Status == "Delivered" || o.Status == "Completed") && o.Dasher == Dasher) : (type == "taken") ? (o.Status == "In Progress" && o.Dasher == Dasher) : (o.Status == "Pending"))
+                        {
+                            temp.Add(o);
+                        }
                     }
-                }
+                    if (temp.Count == 0 && n < Customers.Count - 1)
+                    {
+                        n++;
+                    }
+                } while (temp.Count == 0 && n < Customers.Count - 1);
                 if (temp.Count > 0)
                 {
                     Console.Clear();
                     Console.WriteLine((type == "done") ? "Orders Delivered" : (type == "taken") ? "Orders Accepted" : "Available Orders");
-                    Console.WriteLine("\t\t\t\tPage " + n);
-                    Console.WriteLine("====================================");
+                    Console.WriteLine("\n{0}\n====================================", Customers[n]);
                     int count = 1;
                     foreach (Order o in temp)
                     {
@@ -110,7 +115,7 @@ namespace ConsoleApp
                         {
                             Console.WriteLine("------------------------------------");
                         }
-                        Console.WriteLine("{0}. {1} {2} {3}", count, o.TotalPrice, o.Date, o.Status);
+                        Console.WriteLine("{0}. ${1} {2} {3}", count, o.TotalPrice, o.Date, o.Status);
                         count++;
                     }
                     Console.WriteLine("------------------------------------");
@@ -124,7 +129,7 @@ namespace ConsoleApp
                     {
                         choices[i + 2] = i.ToString();
                     }
-                    Console.Write("Enter selection (type '<'/'>' to switch pages): ");
+                    Console.Write("Enter selection (type '<'/'>' to switch customers): ");
                     choice = Console.ReadLine();
                     while (Array.Find(choices, c => c == choice) == null)
                     {
@@ -159,7 +164,7 @@ namespace ConsoleApp
                         Console.Clear();
                         int index = Convert.ToInt32(choice) - 1;
                         Console.WriteLine("====================================");
-                        Console.WriteLine("Customer: " + Customers[n].Email);
+                        Console.WriteLine("Customer: " + Customers[n]);
                         PropertyInfo[] properties = typeof(Order).GetProperties();
                         foreach (PropertyInfo property in properties)
                         {
@@ -168,7 +173,6 @@ namespace ConsoleApp
                                 double share = Convert.ToDouble(property.GetValue(temp[index]));
                                 share *= Convert.ToDouble(temp[index].TotalPrice);
                                 Console.WriteLine("DasherShare: $" + share);
-
                             }
                             else if (property.Name != "Items")
                             {
