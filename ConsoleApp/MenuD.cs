@@ -174,6 +174,12 @@ namespace ConsoleApp
                                 share *= Convert.ToDouble(temp[index].TotalPrice);
                                 Console.WriteLine("DasherShare: $" + share);
                             }
+                            else if (property.Name == "Business") 
+                            {
+                                Business b = (Business)property.GetValue(temp[index]);
+                                Console.WriteLine("Business: " + b);
+                                Console.WriteLine("Business Address: " + b.Address);
+                            }
                             else if (property.Name != "Items")
                             {
                                 Console.WriteLine(property.Name + ": " + ((property.Name == "TotalPrice") ? "$" : "") + property.GetValue(temp[index]));
