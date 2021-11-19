@@ -362,7 +362,7 @@ namespace ConsoleApp
         //**************************************************
         static void Main(string[] args)
         {
-            FileStream reader = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            FileStream reader = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Read);
             DataContractJsonSerializer inputSerializer;
             inputSerializer = new DataContractJsonSerializer(typeof(DataList));
             if (reader.Length == 0) {
